@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ethers, BigNumber } from 'ethers'
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react'
-import RoboPunksNFT from './RoboPunksNFT.json'
+import RoboPunksNFT from '../RoboPunksNFT.json'
 
 const roboPunksNFTAddress = '0x775Bc97374068dF5ec70BCDB97B9790D603Fb43B'
 
