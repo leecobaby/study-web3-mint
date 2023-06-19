@@ -1,9 +1,10 @@
 import { ethers } from 'ethers'
 import { convertIpfsUriToHttpUrl } from '../utils/ipfsUtil'
 
-const contractAddress = '0x86c95d737d665381e3046cC42703724Ace18eBDD'
+const contractAddress = '0xB6beB25B9d4cB1A2911682175Cc887268a75F773'
 const tokensCount = 10
-const jsonRPCEndpoint = 'https://api.calibration.node.glif.io/'
+const FilJsonRpcUrl = 'https://api.calibration.node.glif.io/'
+const FilJsonRpcWssUrl = 'wss://wss.calibration.node.glif.io/apigw/lotus/rpc/v0'
 const abi = [
   'function name() view returns (string)',
   'function symbol() view returns (string)',
@@ -12,11 +13,16 @@ const abi = [
   'function tokenURI(uint) view returns (string)',
   'function mint(address, uint)'
 ]
-const contract = new ethers.Contract(
-  contractAddress,
-  abi,
-  new ethers.providers.JsonRpcProvider(jsonRPCEndpoint)
+const filProvider = new ethers.providers.JsonRpcProvider(FilJsonRpcUrl)
+
+const filWssProvider = new ethers.providers.WebSocketProvider(FilJsonRpcWssUrl)
+
+let network = filWssProvider.getNetwork()
+network.then((res) =>
+  console.log(`[${new Date().toLocaleTimeString()}] 连接到 chain ID ${res.chainId}`)
 )
+
+const contract = new ethers.Contract(contractAddress, abi, filProvider)
 // let browserProvider = null
 // let accounts = null
 // const initBrowserProvider = async () => {
@@ -42,7 +48,8 @@ const getSignedContract = (provider) => {
 const getContractSpec = async () => {
   return {
     name: await contract.name(),
-    symbol: await contract.symbol()
+    symbol: await contract.symbol(),
+    address: contractAddress
   }
 }
 
@@ -75,4 +82,4 @@ const getToken = async (tokenId) => {
   }
 }
 
-export { getContractSpec, getToken, getSignedContract, tokensCount }
+export { getContractSpec, getToken, getSignedContract, tokensCount, filProvider, filWssProvider }

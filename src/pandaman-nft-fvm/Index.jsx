@@ -15,6 +15,7 @@ export function PandaNFT() {
     const initProvider = async () => {
       if (window.ethereum) {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
+        console.log('provider: ', provider)
         try {
           await window.ethereum.enable()
           setProvider(provider)
@@ -42,11 +43,43 @@ export function PandaNFT() {
     fetchContractSpec()
   }, [])
 
+  useEffect(() => {}, [contractSpec.address])
+
   const handleMint = async (tokenId) => {
-    const signer = getSignedContract(provider)
-    console.log('signer: ', signer)
-    // const signer = contract.connect(provider.getSigner())
-    await signer.mint(account, tokenId)
+    const tokenIndex = tokens.findIndex((token) => token.tokenId === tokenId)
+    if (tokenIndex === -1) {
+      return
+    }
+    const updatedTokens = [...tokens]
+    updatedTokens[tokenIndex] = {
+      ...updatedTokens[tokenIndex],
+      isLoading: true
+    }
+    setTokens(updatedTokens)
+
+    try {
+      const signer = getSignedContract(provider)
+      // wake up metamask to sign the transaction
+      const tx = await signer.mint(account, tokenId)
+      console.log('tx: ', tx)
+      await tx.wait()
+      console.log('Transaction confirmed')
+
+      const intervalId = setInterval(async () => {
+        console.log('Checking', tokenId)
+        const updatedToken = await getToken(tokenId)
+        if (updatedToken.owner) {
+          const updatedTokens = [...tokens]
+          updatedTokens[tokenIndex] = { ...updatedToken, isLoading: false }
+          setTokens(updatedTokens)
+          console.log('updatedTokens: ', updatedTokens)
+          clearInterval(intervalId)
+        }
+      }, 1000)
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
   }
 
   return (
@@ -77,7 +110,12 @@ export function PandaNFT() {
               height="100%"
               objectFit="contain"
             />
-            <Button mt="10px" colorScheme="blue" onClick={() => handleMint(token.tokenId)}>
+            <Button
+              mt="10px"
+              colorScheme="blue"
+              isLoading={token.isLoading}
+              onClick={() => handleMint(token.tokenId)}
+            >
               Mint
             </Button>
           </Box>
