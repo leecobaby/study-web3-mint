@@ -43,8 +43,6 @@ export function PandaNFT() {
     fetchContractSpec()
   }, [])
 
-  useEffect(() => {}, [contractSpec.address])
-
   const handleMint = async (tokenId) => {
     const tokenIndex = tokens.findIndex((token) => token.tokenId === tokenId)
     if (tokenIndex === -1) {
@@ -109,14 +107,23 @@ export function PandaNFT() {
               width="100%"
               height="100%"
               objectFit="contain"
+              transition="all 0.2s ease-in-out"
+              _hover={{
+                filter: 'brightness(0.8)'
+              }}
             />
             <Button
               mt="10px"
               colorScheme="blue"
               isLoading={token.isLoading}
+              transition="all 0.2s ease-in-out"
+              _hover={{
+                transform: 'scale(1.05)',
+                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)'
+              }}
               onClick={() => handleMint(token.tokenId)}
             >
-              Mint
+              {token.isLoading ? 'Minting...' : 'Mint'}
             </Button>
           </Box>
         ))}
