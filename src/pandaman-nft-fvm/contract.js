@@ -17,11 +17,25 @@ const contract = new ethers.Contract(
   abi,
   new ethers.providers.JsonRpcProvider(jsonRPCEndpoint)
 )
+// let browserProvider = null
+// let accounts = null
+// const initBrowserProvider = async () => {
+//   if (window.ethereum) {
+//     browserProvider = new ethers.providers.Web3Provider(window.ethereum)
 
-console.log('contract', contract)
+//     try {
+//       // Request account access if needed
+//       await window.ethereum.enable()
+//       const accounts = await browserProvider.listAccounts()
+//     } catch (error) {
+//       // User denied account access...
+//       console.log('User denied account access')
+//     }
+//   }
+// }
 
-const getWritableContract = () => {
-  const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner()
+const getSignedContract = (provider) => {
+  const signer = provider.getSigner()
   return new ethers.Contract(contractAddress, abi, signer)
 }
 
@@ -36,7 +50,6 @@ const getToken = async (tokenId) => {
   let owner = ''
   try {
     owner = await contract.ownerOf(tokenId)
-    console.log('owner', owner)
   } catch (error) {}
 
   let tokenURI = ''
@@ -62,4 +75,4 @@ const getToken = async (tokenId) => {
   }
 }
 
-export { getContractSpec, getToken, getWritableContract, tokensCount }
+export { getContractSpec, getToken, getSignedContract, tokensCount }
