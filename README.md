@@ -2,10 +2,10 @@
 
 on the goerli testnet
 
-https://web3-robopunks-mint.vercel.app/
+https://leeco-web3-demo.vercel.app/
 
 # PandamanNFT
 
 on the filcoin calibration network
 
-https://web3-robopunks-mint.vercel.app/panda
+https://leeco-web3-demo.vercel.app/panda
