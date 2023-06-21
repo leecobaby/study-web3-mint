@@ -16,7 +16,7 @@ export function MainMint({ accounts, setAccounts }) {
       const contract = new ethers.Contract(roboPunksNFTAddress, RoboPunksNFT.abi, signer)
       try {
         const transaction = await contract.mint(BigNumber.from(mintAmount), {
-          value: ethers.utils.parseEther((mintAmount * 0.02).toString())
+          value: ethers.utils.parseEther((mintAmount * 0.002).toString())
         })
         // await transaction.wait()
         console.log('transaction: ', transaction)
