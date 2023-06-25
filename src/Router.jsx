@@ -1,6 +1,7 @@
+import { createBrowserRouter } from 'react-router-dom'
 import { RoboPunksNFT } from './robo-punks-nft'
 import { PandaNFT } from './pandaman-nft-fvm'
-import { createBrowserRouter } from 'react-router-dom'
+import { StarknetNFT } from './starknet-nft/Index.jsx'
 
 export const router = createBrowserRouter([
   {
@@ -10,5 +11,9 @@ export const router = createBrowserRouter([
   {
     path: '/panda',
     Component: PandaNFT
+  },
+  {
+    path: '/starknet',
+    Component: StarknetNFT
   }
 ])

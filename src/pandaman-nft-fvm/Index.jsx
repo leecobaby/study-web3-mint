@@ -1,8 +1,8 @@
 import { ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import { Box, Center, Heading, SimpleGrid, Image, Button } from '@chakra-ui/react'
+import { createCssElement } from '../utils/style'
 import { getContractSpec, getToken, getSignedContract, tokensCount } from './contract'
-import './index.css'
 
 export function PandaNFT() {
   document.body.classList.remove('no-scroll')
@@ -10,6 +10,13 @@ export function PandaNFT() {
   const [contractSpec, setContractSpec] = useState({})
   const [provider, setProvider] = useState(null)
   const [account, setAccount] = useState(null)
+
+  useEffect(() => {
+    let cssEl = createCssElement('/style/pandaman-nft.css')
+    return () => {
+      document.head.removeChild(cssEl)
+    }
+  }, [])
 
   useEffect(() => {
     const initProvider = async () => {
